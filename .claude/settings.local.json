@@ -6,7 +6,10 @@
       "Bash(npm install:*)",
       "Bash(cat:*)",
       "Bash(git add:*)",
-      "Bash(vercel)"
+      "Bash(vercel)",
+      "Bash(vercel:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
