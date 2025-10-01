@@ -4,10 +4,11 @@ import { getProductById, updateProduct, deleteProduct } from '@/lib/db/products'
 // 특정 제품 조회
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const product = await getProductById(params.id);
+    const { id } = await params;
+    const product = await getProductById(id);
 
     if (!product) {
       return NextResponse.json({
@@ -32,13 +33,14 @@ export async function GET(
 // 제품 정보 업데이트
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const updateData = await request.json();
-    await updateProduct(params.id, updateData);
+    await updateProduct(id, updateData);
 
-    const updatedProduct = await getProductById(params.id);
+    const updatedProduct = await getProductById(id);
 
     return NextResponse.json({
       success: true,
@@ -56,10 +58,11 @@ export async function PATCH(
 // 제품 삭제
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await deleteProduct(params.id);
+    const { id } = await params;
+    await deleteProduct(id);
 
     return NextResponse.json({
       success: true,

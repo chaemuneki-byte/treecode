@@ -4,10 +4,11 @@ import { getOrderById, updateOrder, deleteOrder } from '@/lib/db/orders';
 // 특정 주문 조회
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const order = await getOrderById(params.id);
+    const { id } = await params;
+    const order = await getOrderById(id);
 
     if (!order) {
       return NextResponse.json({
@@ -32,13 +33,14 @@ export async function GET(
 // 주문 업데이트
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const updateData = await request.json();
-    await updateOrder(params.id, updateData);
+    await updateOrder(id, updateData);
 
-    const updatedOrder = await getOrderById(params.id);
+    const updatedOrder = await getOrderById(id);
 
     return NextResponse.json({
       success: true,
@@ -56,10 +58,11 @@ export async function PATCH(
 // 주문 삭제
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await deleteOrder(params.id);
+    const { id } = await params;
+    await deleteOrder(id);
 
     return NextResponse.json({
       success: true,

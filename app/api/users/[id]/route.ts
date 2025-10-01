@@ -4,10 +4,11 @@ import { getUserById, updateUser, deleteUser } from '@/lib/db/users';
 // 특정 사용자 조회
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getUserById(params.id);
+    const { id } = await params;
+    const user = await getUserById(id);
 
     if (!user) {
       return NextResponse.json({
@@ -32,13 +33,14 @@ export async function GET(
 // 사용자 정보 업데이트
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const updateData = await request.json();
-    await updateUser(params.id, updateData);
+    await updateUser(id, updateData);
 
-    const updatedUser = await getUserById(params.id);
+    const updatedUser = await getUserById(id);
 
     return NextResponse.json({
       success: true,
@@ -56,10 +58,11 @@ export async function PATCH(
 // 사용자 삭제
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await deleteUser(params.id);
+    const { id } = await params;
+    await deleteUser(id);
 
     return NextResponse.json({
       success: true,
