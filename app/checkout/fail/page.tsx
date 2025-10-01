@@ -1,10 +1,11 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { XCircle } from 'lucide-react'
 
-export default function CheckoutFailPage() {
+function FailContent() {
   const searchParams = useSearchParams()
   const errorCode = searchParams.get('code')
   const errorMessage = searchParams.get('message')
@@ -44,5 +45,13 @@ export default function CheckoutFailPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutFailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 pt-20">로딩 중...</div>}>
+      <FailContent />
+    </Suspense>
   )
 }
